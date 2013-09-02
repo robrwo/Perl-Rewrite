@@ -1,16 +1,14 @@
 package Perl::Rewrite::Rule::Shebang;
 
-use Moose;
+use Any::Moose;
+
+extends 'Perl::Rewrite::Rule';
 
 has 'shebang' => (
     is      => 'ro',
     isa     => 'Str',
     default => sub { return '/usr/bin/env perl'; },
 );
-
-sub api_version {
-    return 1;
-}
 
 sub rewrite {
     my ($self, $ppi) = @_;
