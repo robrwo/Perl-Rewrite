@@ -16,7 +16,13 @@ has 'version' => (
 has 'type' => (
   is  => 'ro',
   isa => 'Str',
-    default => sub { return 'use'; } # use or require
+  default => sub { return 'use'; }, # use or require
+);
+
+has 'extra_newline' => (
+  is  => 'ro',
+  isa => 'Bool',
+    default => sub { return 0; },
 );
 
 sub api_version {
@@ -94,7 +100,8 @@ sub apply {
         $stmt->add_element( PPI::Token::Whitespace->new(' ') );
         $stmt->add_element(PPI::Token::Number::Version->new( $self->version->stringify ) );
         $stmt->add_element( PPI::Token::Structure->new(';') );
-        $stmt->add_element( PPI::Token::Whitespace->new("\n\n") );
+        $stmt->add_element( PPI::Token::Whitespace->new("\n") );
+        $stmt->add_element( PPI::Token::Whitespace->new("\n") ) if ($self->extra_newline);
 
 	# FIXME - this will insert version before "package" when there
 	# are no includes!
