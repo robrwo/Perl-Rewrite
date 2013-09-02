@@ -94,7 +94,7 @@ sub apply {
         $stmt->add_element( PPI::Token::Whitespace->new(' ') );
         $stmt->add_element(PPI::Token::Number::Version->new( $self->version->stringify ) );
         $stmt->add_element( PPI::Token::Structure->new(';') );
-        $stmt->add_element( PPI::Token::Whitespace->new("\n") );
+        $stmt->add_element( PPI::Token::Whitespace->new("\n\n") );
 
 	# FIXME - this will insert version before "package" when there
 	# are no includes!
