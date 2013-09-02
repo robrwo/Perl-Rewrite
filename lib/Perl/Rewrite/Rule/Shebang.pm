@@ -10,6 +10,10 @@ has 'shebang' => (
     default => sub { return '/usr/bin/env perl'; },
 );
 
+sub api_version {
+    return 1;
+}
+
 sub rewrite {
     my ($self, $ppi) = @_;
 
@@ -25,9 +29,13 @@ sub rewrite {
 
     if ($shebang) {
 
+	# TODO log update
+
 	$shebang->set_content( '#!' . $self->shebang . "\n" );
 
     } else {
+
+	# TODO log adding
 
 	$shebang = PPI::Token::Comment->new( '#!' . $self->shebang . "\n" );
 
