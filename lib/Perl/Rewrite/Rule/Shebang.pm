@@ -43,6 +43,7 @@ sub rewrite {
 
     }
 
+    return $shebang;
 }
 
 1;
