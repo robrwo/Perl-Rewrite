@@ -21,7 +21,7 @@ is($rule->api_version(), 1, "api_version");
 {
     my $ppi = PPI::Document->new( \ "#!perl\nprint \"Hello World\\n\";\n" );
 
-    $rule->rewrite($ppi);
+    $rule->apply($ppi);
 
     my ($fh, $tmpfile) = tempfile();
 
@@ -36,7 +36,7 @@ is($rule->api_version(), 1, "api_version");
 {
     my $ppi = PPI::Document->new( \ "print \"Hello World\\n\";\n" );
 
-    $rule->rewrite($ppi);
+    $rule->apply($ppi);
 
     my ($fh, $tmpfile) = tempfile();
 

@@ -23,7 +23,7 @@ sub api_version {
     return 1;
 }
 
-sub rewrite {
+sub apply {
     my ($self, $ppi) = @_;
 
     my $includes = $ppi->find("PPI::Statement::Include");
