@@ -117,7 +117,7 @@ sub _change_to_use_carp {
             $stmt->add_element( PPI::Token::Word->new('Carp') );
             $stmt->add_element( PPI::Token::Structure->new(';') );
 
-	    if ($first->isa("PPI::Statement::Include")) {
+	    if ($first->isa("PPI::Statement::Include") || $first->isa("PPI::Statement::Package")) {
 		$first->insert_after($stmt);	       
 		$stmt->insert_before( PPI::Token::Whitespace->new("\n") );
 	    } else {
