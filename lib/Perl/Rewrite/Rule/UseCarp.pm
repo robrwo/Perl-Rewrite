@@ -19,6 +19,9 @@ sub _warn_to_carp {
 
     if ($token->content eq 'warn') {
 	$token->set_content('carp');
+
+	# TODO - log change
+
 	return $token;
     } else {	
 	return;
@@ -32,6 +35,9 @@ sub _die_to_croak {
 
     if ($token->content eq 'die') {
 	$token->set_content('croak');
+
+	# TODO - log change
+
 	return $token;
     } else {	
 	return;
