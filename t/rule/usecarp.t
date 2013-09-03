@@ -31,7 +31,12 @@ is($rule->api_version(), 1, "api_version");
 
     note(join("", @content));
 
+    is($content[0], "use Carp;\n", "use Carp");
+    like($content[1], qr/carp[ ]/, "warn changed to carp");
+
 }
 
+
+# TODO - more tests
 
 done_testing;
