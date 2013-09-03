@@ -46,6 +46,8 @@ sub _die_to_croak {
 
 # TODO - this should be a generic method in a role
 
+# This is messy and needs to be rewritten
+
 sub _change_to_use_carp {
     my ($self, $ppi) = @_;
 
