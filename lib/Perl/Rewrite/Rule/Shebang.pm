@@ -1,6 +1,6 @@
 package Perl::Rewrite::Rule::Shebang;
 
-use Any::Moose;
+use Moose;
 
 extends 'Perl::Rewrite::Rule';
 

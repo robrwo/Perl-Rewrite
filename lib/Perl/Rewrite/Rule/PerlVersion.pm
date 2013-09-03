@@ -1,6 +1,6 @@
 package Perl::Rewrite::Rule::PerlVersion;
 
-use Any::Moose;
+use Moose;
 
 extends 'Perl::Rewrite::Rule';
 
