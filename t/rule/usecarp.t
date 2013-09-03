@@ -73,6 +73,24 @@ is($rule->api_version(), 1, "api_version");
 
 }
 
+{
+    my $ppi = PPI::Document->new( \ "open() || die \"ouch: \$!\";\n" );
+
+    $rule->apply($ppi);
+
+    my ($fh, $tmpfile) = tempfile();
+
+    $ppi->save( $tmpfile );
+
+    my @content = read_file( $tmpfile );
+
+    note(join("", @content));
+
+    is($content[0], "use Carp;\n", "use Carp");
+    like($content[1], qr/\|\|[ ]croak[ ]/, "die changed to croak");
+
+}
+
 
 # TODO - more tests
 
