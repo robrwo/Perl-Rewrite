@@ -1,12 +1,25 @@
 package Perl::Rewrite::Rule::UseCarp;
 
+use Carp;
 use Moo;
+use Types::Standard qw/ Bool Str /;
 
 extends 'Perl::Rewrite::Rule';
 
 with 'Perl::Rewrite::Role::Iterator::Statement';
 
-use Carp;
+has 'module' => (
+    is      => 'ro',
+    isa     => Types::Standard::Str,
+    default => sub { return 'Carp'; },
+);
+
+has 'use_carp' => (
+    is      => 'ro',
+    isa     => Types::Standard::Bool,
+    default => sub { 1; },
+);
+
 
 sub api_version {
     return 1;
@@ -67,7 +80,7 @@ sub _change_to_use_carp {
 
 	# TODO - other modules like Carp::Clan
 
-        $uses_carp = $include if $include->module eq 'Carp';
+        $uses_carp = $include if $include->module eq $self->module;
 
         last if ($uses_carp);
 
@@ -116,7 +129,8 @@ sub _change_to_use_carp {
 
             $stmt->add_element( PPI::Token::Word->new('use') );
             $stmt->add_element( PPI::Token::Whitespace->new(' ') );
-            $stmt->add_element( PPI::Token::Word->new('Carp') );
+
+            $stmt->add_element( PPI::Token::Word->new( $self->module ) );
             $stmt->add_element( PPI::Token::Structure->new(';') );
 
 	    if ($first->isa("PPI::Statement::Include") || $first->isa("PPI::Statement::Package")) {
@@ -155,7 +169,7 @@ sub apply {
 	$self->can("_die_to_croak")
     );
 
-    if ($carps + $croaks) {
+    if ($self->use_carp && ($carps + $croaks)) {
 
 	$self->_change_to_use_carp($ppi);
 
