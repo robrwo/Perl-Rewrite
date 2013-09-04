@@ -2,7 +2,7 @@ package Perl::Rewrite::Rule::UseCarp;
 
 use Carp;
 use Moo;
-use Types::Standard qw/ Bool Str /;
+use Types::Standard qw/ Any Bool HashRef Str /;
 
 extends 'Perl::Rewrite::Rule';
 
@@ -20,6 +20,13 @@ has 'use_carp' => (
     default => sub { 1; },
 );
 
+has 'carpers' => (
+    is => 'ro',
+    isa  => Types::Standard::HashRef[Any],
+    default => sub {
+	return { map { $_ => undef } qw/ Carp Carp::Clan / }
+    },
+);
 
 sub api_version {
     return 1;
@@ -78,9 +85,9 @@ sub _change_to_use_carp {
 
         next if ( $include->pragma );
 
-	# TODO - other modules like Carp::Clan
-
-        $uses_carp = $include if $include->module eq $self->module;
+        $uses_carp = $include 
+	    if ( $self->carpers->{ $include->module } || 
+		 $include->module eq $self->module );
 
         last if ($uses_carp);
 
