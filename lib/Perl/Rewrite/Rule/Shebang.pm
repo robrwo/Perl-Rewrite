@@ -4,8 +4,11 @@ use Moo;
 
 extends 'Perl::Rewrite::Rule';
 
+use Types::Standard qw/ Str /;
+
 has 'shebang' => (
     is      => 'ro',
+    usa     => Types::Standard::Str,
     default => sub { return '/usr/bin/env perl'; },
 );
 

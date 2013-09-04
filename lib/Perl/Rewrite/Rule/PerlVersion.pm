@@ -8,14 +8,11 @@ use version 0.77;
 
 use Carp;
 use Type::Tiny;
+use Types::Standard qw/ Bool /;
 
 my $VERSION_TYPE = Type::Tiny->new(
     name => "Version",
     constraint => sub { (defined $_) && $_->isa("version") },
-);
-
-my $BOOL_TYPE = Type::Tiny->new(
-    name => "Bool",
 );
 
 has 'version' => (
@@ -30,7 +27,7 @@ has 'type' => (
 
 has 'extra_newline' => (
   is  => 'ro',
-  isa => $BOOL_TYPE,
+    isa => Types::Standard::Bool,
     default => sub { return 0; },
 );
 
