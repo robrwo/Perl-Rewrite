@@ -1,14 +1,14 @@
 package Perl::Rewrite::Rule::Shebang;
 
 use Moo;
+use Types::Standard qw/ Str /;
 
 extends 'Perl::Rewrite::Rule';
 
-use Types::Standard qw/ Str /;
 
 has 'shebang' => (
     is      => 'ro',
-    usa     => Types::Standard::Str,
+    isa     => Types::Standard::Str,
     default => sub { return '/usr/bin/env perl'; },
 );
 
