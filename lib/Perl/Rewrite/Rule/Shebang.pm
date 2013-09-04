@@ -1,12 +1,11 @@
 package Perl::Rewrite::Rule::Shebang;
 
-use Moose;
+use Moo;
 
 extends 'Perl::Rewrite::Rule';
 
 has 'shebang' => (
     is      => 'ro',
-    isa     => 'Str',
     default => sub { return '/usr/bin/env perl'; },
 );
 

@@ -1,6 +1,6 @@
 package Perl::Rewrite::Rule::UseCarp;
 
-use Moose;
+use Moo;
 
 extends 'Perl::Rewrite::Rule';
 
@@ -162,3 +162,4 @@ sub apply {
     }
 
 }
+

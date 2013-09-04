@@ -1,6 +1,6 @@
 package Perl::Rewrite::Role::Iterator::Statement;
 
-use Moose::Role;
+use Moo::Role;
 
 sub search_statements_for_symbol {
     my ($self, $ppi, $symbol, $callback) = @_;

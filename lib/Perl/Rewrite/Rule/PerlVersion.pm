@@ -1,27 +1,36 @@
 package Perl::Rewrite::Rule::PerlVersion;
 
-use Moose;
+use Moo;
 
 extends 'Perl::Rewrite::Rule';
 
 use version 0.77;
 
 use Carp;
+use Type::Tiny;
+
+my $VERSION_TYPE = Type::Tiny->new(
+    name => "Version",
+    constraint => sub { (defined $_) && $_->isa("version") },
+);
+
+my $BOOL_TYPE = Type::Tiny->new(
+    name => "Bool",
+);
 
 has 'version' => (
   is  => 'ro',
-  isa => 'version',
+  isa => $VERSION_TYPE,
 );
 
 has 'type' => (
   is  => 'ro',
-  isa => 'Str',
   default => sub { return 'use'; }, # use or require
 );
 
 has 'extra_newline' => (
   is  => 'ro',
-  isa => 'Bool',
+  isa => $BOOL_TYPE,
     default => sub { return 0; },
 );
 
