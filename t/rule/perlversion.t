@@ -86,6 +86,28 @@ my $version = $rule->version->stringify;
 }
 
 {
+    my $ppi = PPI::Document->new( \ "package Foo;\nprint \"Hello World\\n\";\n" );
+
+    $rule->apply($ppi);
+
+    my ($fh, $tmpfile) = tempfile();
+
+    $ppi->save( $tmpfile );
+
+    my @content = read_file( $tmpfile );
+
+    note(join("", @content));
+
+    is($content[1], "use ${version};\n", "use version");
+
+  SKIP: {
+      skip "no extra newline", 1 unless ($rule->extra_newline);
+      is($content[2], "\n", "extra_newline");
+    }
+
+}
+
+{
     my $ppi = PPI::Document->new( \ "package Foo;\nuse strict;\nuse warnings;\nuse Carp;\nprint \"Hello World\\n\";\n" );
 
     $rule->apply($ppi);

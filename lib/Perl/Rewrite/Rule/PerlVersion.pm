@@ -54,6 +54,9 @@ sub apply {
 
             $version = $include;
 
+	    # Note - if there are multiple versions, they will be
+	    # ignored.
+
         }
 
     } else {
@@ -109,12 +112,11 @@ sub apply {
         $stmt->add_element( PPI::Token::Whitespace->new("\n") );
         $stmt->add_element( PPI::Token::Whitespace->new("\n") ) if ($self->extra_newline);
 
-	# FIXME - this will insert version before "package" when there
-	# are no includes!
+        if ( $top->isa("PPI::Statement::Package") ) {
 
-        if ( $top->isa("PPI::Token::Whitespace") ) {
+	    # TODO - fix whitespace issue
 
-            $top->insert_before($stmt);
+            $top->insert_after($stmt);
 
         } else {
 
