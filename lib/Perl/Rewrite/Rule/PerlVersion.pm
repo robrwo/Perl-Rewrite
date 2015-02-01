@@ -10,6 +10,9 @@ use Carp;
 use Type::Tiny;
 use Types::Standard -types;
 
+use Perl::Rewrite::Util::Include;
+use Perl::Rewrite::Util::Whitespace;
+
 my $VERSION_TYPE = Type::Tiny->new(
     name => "Version",
     constraint => sub { (defined $_) && $_->isa("version") },
@@ -101,25 +104,21 @@ sub apply {
 
     } elsif ( !$version ) {
 
-        my $stmt = PPI::Statement::Include->new;
+        my $stmt = include_line(
+            PPI::Token::Number::Version->new( $self->version->stringify ),
+            $self->type,
+        );
 
-	# TODO Perl::Rewrite::Util::Version to create a use version line
-
-        $stmt->add_element( PPI::Token::Word->new( $self->type ) );
-        $stmt->add_element( PPI::Token::Whitespace->new(' ') );
-        $stmt->add_element(PPI::Token::Number::Version->new( $self->version->stringify ) );
-        $stmt->add_element( PPI::Token::Structure->new(';') );
-        $stmt->add_element( $self->newline )
-            if ($self->extra_newline);
+        $stmt->add_element( newline ) if ($self->extra_newline);
 
         if ( $top->isa("PPI::Statement::Package") ) {
 
             $top->insert_after($stmt);
-            $top->insert_after( $self->newline );
+            $top->insert_after( newline );
 
         } else {
 
-            $stmt->add_element( $self->newline );
+            $stmt->add_element( newline );
             $top->insert_before($stmt);
 
         }

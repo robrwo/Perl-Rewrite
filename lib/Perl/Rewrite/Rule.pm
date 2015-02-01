@@ -8,8 +8,4 @@ use PPI;
 # want to instantiate the rules and run them through multiple
 # documents.
 
-sub newline {
-    PPI::Token::Whitespace->new("\n");
-}
-
 1;

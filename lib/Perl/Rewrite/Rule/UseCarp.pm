@@ -1,12 +1,15 @@
 package Perl::Rewrite::Rule::UseCarp;
 
-use Carp;
 use Moo;
-use Types::Standard qw/ Any Bool HashRef Str /;
 
 extends 'Perl::Rewrite::Rule';
-
 with 'Perl::Rewrite::Role::Iterator::Statement';
+
+use Carp;
+use Types::Standard -types;
+
+use Perl::Rewrite::Util::Include;
+use Perl::Rewrite::Util::Whitespace;
 
 has 'module' => (
     is      => 'ro',
@@ -43,7 +46,7 @@ sub _warn_to_carp {
 	# TODO - log change
 
 	return $token;
-    } else {	
+    } else {
 	return;
     }
 }
@@ -59,7 +62,7 @@ sub _die_to_croak {
 	# TODO - log change
 
 	return $token;
-    } else {	
+    } else {
 	return;
     }
 }
@@ -85,15 +88,15 @@ sub _change_to_use_carp {
 
         next if ( $include->pragma );
 
-        $uses_carp = $include 
-	    if ( $self->carpers->{ $include->module } || 
+        $uses_carp = $include
+	    if ( $self->carpers->{ $include->module } ||
 		 $include->module eq $self->module );
 
         last if ($uses_carp);
 
     }
 
-    $first //= 
+    $first //=
 	$includes->[-1] // # use the last include
 	$ppi->find_first("PPI::Statement");
 
@@ -132,20 +135,14 @@ sub _change_to_use_carp {
 
         if ($first) {
 
-            my $stmt = PPI::Statement::Include->new;
-
-            $stmt->add_element( PPI::Token::Word->new('use') );
-            $stmt->add_element( PPI::Token::Whitespace->new(' ') );
-
-            $stmt->add_element( PPI::Token::Word->new( $self->module ) );
-            $stmt->add_element( PPI::Token::Structure->new(';') );
+            my $stmt = include_line($self->module);
 
 	    if ($first->isa("PPI::Statement::Include") || $first->isa("PPI::Statement::Package")) {
-		$first->insert_after($stmt);	       
-		$stmt->insert_before( PPI::Token::Whitespace->new("\n") );
+		$first->insert_after($stmt);
+		$stmt->insert_before( newline );
 	    } else {
 		$first->insert_before($stmt);
-		$stmt->insert_after(PPI::Token::Whitespace->new("\n"));
+		$stmt->insert_after( newline );
 	    }
 
 	    # TODO -log

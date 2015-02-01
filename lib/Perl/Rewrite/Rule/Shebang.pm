@@ -1,10 +1,9 @@
 package Perl::Rewrite::Rule::Shebang;
 
 use Moo;
-use Types::Standard qw/ Str /;
+use Types::Standard -types;
 
 extends 'Perl::Rewrite::Rule';
-
 
 has 'shebang' => (
     is      => 'ro',
@@ -23,7 +22,7 @@ sub apply {
 
     if (my $comment = $ppi->find_first("PPI::Token::Comment")) {
 
-	$shebang = $comment 
+	$shebang = $comment
 	    if (($comment->line_number == 1) &&
 		(substr($comment->content, 0, 2) eq '#!'));
 
