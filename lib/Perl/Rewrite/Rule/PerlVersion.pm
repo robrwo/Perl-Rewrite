@@ -8,7 +8,7 @@ use version 0.77;
 
 use Carp;
 use Type::Tiny;
-use Types::Standard qw/ Bool /;
+use Types::Standard -types;
 
 my $VERSION_TYPE = Type::Tiny->new(
     name => "Version",
@@ -16,19 +16,19 @@ my $VERSION_TYPE = Type::Tiny->new(
 );
 
 has 'version' => (
-  is  => 'ro',
-  isa => $VERSION_TYPE,
+    is  => 'ro',
+    isa => $VERSION_TYPE,
 );
 
 has 'type' => (
-  is  => 'ro',
-  default => sub { return 'use'; }, # use or require
+    is  => 'ro',
+    default => sub { return 'use'; }, # TODO use or require
 );
 
 has 'extra_newline' => (
-  is  => 'ro',
-    isa => Types::Standard::Bool,
-    default => sub { return 0; },
+    is  => 'ro',
+    isa => Bool,
+    default => 0,
 );
 
 sub api_version {
@@ -109,17 +109,17 @@ sub apply {
         $stmt->add_element( PPI::Token::Whitespace->new(' ') );
         $stmt->add_element(PPI::Token::Number::Version->new( $self->version->stringify ) );
         $stmt->add_element( PPI::Token::Structure->new(';') );
-        $stmt->add_element( PPI::Token::Whitespace->new("\n") )
+        $stmt->add_element( $self->newline )
             if ($self->extra_newline);
 
         if ( $top->isa("PPI::Statement::Package") ) {
 
             $top->insert_after($stmt);
-            $top->insert_after( PPI::Token::Whitespace->new("\n") );
+            $top->insert_after( $self->newline );
 
         } else {
 
-            $stmt->add_element( PPI::Token::Whitespace->new("\n") );
+            $stmt->add_element( $self->newline );
             $top->insert_before($stmt);
 
         }
