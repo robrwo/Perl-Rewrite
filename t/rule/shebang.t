@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use File::Slurp qw/ read_file /;
+use File::Slurp::Tiny qw/ read_lines /;
 use File::Temp qw/ tempfile /;
 use PPI;
 use Readonly;
@@ -27,7 +27,7 @@ is($rule->api_version(), 1, "api_version");
 
     $ppi->save( $tmpfile );
 
-    my @content = read_file( $tmpfile );
+    my @content = read_lines( $tmpfile );
 
     is($content[0], "#!${shebang}\n", "shebang");
 
@@ -42,7 +42,7 @@ is($rule->api_version(), 1, "api_version");
 
     $ppi->save( $tmpfile );
 
-    my @content = read_file( $tmpfile );
+    my @content = read_lines( $tmpfile );
 
     is($content[0], "#!${shebang}\n", "shebang");
 
