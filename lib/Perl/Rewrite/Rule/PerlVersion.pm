@@ -109,17 +109,17 @@ sub apply {
         $stmt->add_element( PPI::Token::Whitespace->new(' ') );
         $stmt->add_element(PPI::Token::Number::Version->new( $self->version->stringify ) );
         $stmt->add_element( PPI::Token::Structure->new(';') );
-        $stmt->add_element( PPI::Token::Whitespace->new("\n") );
-        $stmt->add_element( PPI::Token::Whitespace->new("\n") ) if ($self->extra_newline);
+        $stmt->add_element( PPI::Token::Whitespace->new("\n") )
+            if ($self->extra_newline);
 
         if ( $top->isa("PPI::Statement::Package") ) {
 
-	    # TODO - fix whitespace issue
-
             $top->insert_after($stmt);
+            $top->insert_after( PPI::Token::Whitespace->new("\n") );
 
         } else {
 
+            $stmt->add_element( PPI::Token::Whitespace->new("\n") );
             $top->insert_before($stmt);
 
         }
