@@ -13,31 +13,30 @@ has 'shebang' => (
 );
 
 sub apply {
-    my ($self, $ppi) = @_;
+    my ( $self, $ppi ) = @_;
 
     my $shebang;
 
-    if (my $comment = $ppi->find_first("PPI::Token::Comment")) {
-
-	$shebang = $comment
-	    if (($comment->line_number == 1) &&
-		(substr($comment->content, 0, 2) eq '#!'));
-
+    if ( my $comment = $ppi->find_first("PPI::Token::Comment") ) {
+        $shebang = $comment
+          if ( ( $comment->line_number == 1 )
+            && ( substr( $comment->content, 0, 2 ) eq '#!' ) );
     }
 
     if ($shebang) {
 
-	# TODO log update
+        # TODO log update
 
-	$shebang->set_content( '#!' . $self->shebang . "\n" );
+        $shebang->set_content( '#!' . $self->shebang . "\n" );
 
-    } else {
+    }
+    else {
 
-	# TODO log adding
+        # TODO log adding
 
-	$shebang = PPI::Token::Comment->new( '#!' . $self->shebang . "\n" );
+        $shebang = PPI::Token::Comment->new( '#!' . $self->shebang . "\n" );
 
-	$ppi->top->first_token()->insert_before($shebang);
+        $ppi->top->first_token()->insert_before($shebang);
 
     }
 

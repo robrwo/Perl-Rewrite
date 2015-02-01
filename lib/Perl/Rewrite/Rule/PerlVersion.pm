@@ -15,8 +15,8 @@ use Perl::Rewrite::Util::Include;
 use Perl::Rewrite::Util::Whitespace;
 
 my $VERSION_TYPE = Type::Tiny->new(
-    name => "Version",
-    constraint => sub { (defined $_) && $_->isa("version") },
+    name       => "Version",
+    constraint => sub { ( defined $_ ) && $_->isa("version") },
 );
 
 has 'version' => (
@@ -25,18 +25,18 @@ has 'version' => (
 );
 
 has 'type' => (
-    is  => 'ro',
-    default => sub { return 'use'; }, # TODO use or require
+    is      => 'ro',
+    default => sub { return 'use'; },    # TODO use or require
 );
 
 has 'extra_newline' => (
-    is  => 'ro',
-    isa => Bool,
+    is      => 'ro',
+    isa     => Bool,
     default => 0,
 );
 
 sub apply {
-    my ($self, $ppi) = @_;
+    my ( $self, $ppi ) = @_;
 
     my $includes = $ppi->find("PPI::Statement::Include");
     my $version;
@@ -54,12 +54,13 @@ sub apply {
 
             $version = $include;
 
-	    # Note - if there are multiple versions, they will be
-	    # ignored.
+            # Note - if there are multiple versions, they will be
+            # ignored.
 
         }
 
-    } else {
+    }
+    else {
 
         # If we cannot find any includes, then we look for the first statement
 
@@ -92,37 +93,38 @@ sub apply {
         # Note that the PPI replace method is not yet implemented
 
         $number->insert_before(
-	    PPI::Token::Number::Version->new( $self->version->stringify ) );
+            PPI::Token::Number::Version->new( $self->version->stringify ) );
         $number->delete;
 
-	# TODO log
+        # TODO log
 
-	return $version;
+        return $version;
 
-    } elsif ( !$version ) {
+    }
+    elsif ( !$version ) {
 
         my $stmt = include_line(
             PPI::Token::Number::Version->new( $self->version->stringify ),
-            $self->type,
-        );
+            $self->type, );
 
-        $stmt->add_element( newline ) if ($self->extra_newline);
+        $stmt->add_element(newline) if ( $self->extra_newline );
 
         if ( $top->isa("PPI::Statement::Package") ) {
 
             $top->insert_after($stmt);
-            $top->insert_after( newline );
+            $top->insert_after(newline);
 
-        } else {
+        }
+        else {
 
-            $stmt->add_element( newline );
+            $stmt->add_element(newline);
             $top->insert_before($stmt);
 
         }
 
-	return $stmt;
+        return $stmt;
 
-	# TODO log
+        # TODO log
 
     }
 
