@@ -3,6 +3,7 @@ package Perl::Rewrite::Rule::PerlVersion;
 use Moo;
 
 extends 'Perl::Rewrite::Rule';
+with 'Perl::Rewrite::Role::API::v1';
 
 use version 0.77;
 
@@ -33,10 +34,6 @@ has 'extra_newline' => (
     isa => Bool,
     default => 0,
 );
-
-sub api_version {
-    return 1;
-}
 
 sub apply {
     my ($self, $ppi) = @_;

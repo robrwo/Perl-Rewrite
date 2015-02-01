@@ -4,16 +4,13 @@ use Moo;
 use Types::Standard -types;
 
 extends 'Perl::Rewrite::Rule';
+with 'Perl::Rewrite::Role::API::v1';
 
 has 'shebang' => (
     is      => 'ro',
     isa     => Types::Standard::Str,
     default => sub { return '/usr/bin/env perl'; },
 );
-
-sub api_version {
-    return 1;
-}
 
 sub apply {
     my ($self, $ppi) = @_;

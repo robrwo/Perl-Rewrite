@@ -4,6 +4,7 @@ use Moo;
 
 extends 'Perl::Rewrite::Rule';
 with 'Perl::Rewrite::Role::Iterator::Statement';
+with 'Perl::Rewrite::Role::API::v1';
 
 use Carp;
 use Types::Standard -types;
@@ -30,10 +31,6 @@ has 'carpers' => (
 	return { map { $_ => undef } qw/ Carp Carp::Clan / }
     },
 );
-
-sub api_version {
-    return 1;
-}
 
 sub _warn_to_carp {
     my ($self, $stmt, $token) = @_;
